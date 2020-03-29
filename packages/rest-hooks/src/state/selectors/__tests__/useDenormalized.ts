@@ -7,6 +7,7 @@ import {
 } from '__tests__/common';
 import { normalize, NormalizedIndex } from 'rest-hooks/resource';
 import { initialState } from 'rest-hooks/state/reducer';
+
 import { renderHook, act } from '@testing-library/react-hooks';
 import { useState } from 'react';
 
@@ -164,7 +165,7 @@ describe('useDenormalized()', () => {
       });
     });
 
-    describe.only('no result exists but index is used when using nested schema', () => {
+    describe('no result exists but index is used when using nested schema', () => {
       const pageArticle = PaginatedArticleResource.fromJS({
         ...params,
         author: 23,

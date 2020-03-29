@@ -1,9 +1,10 @@
-import nock from 'nock';
 import {
   CoolerArticleResource,
   UserResource,
   UrlArticleResource,
 } from '__tests__/common';
+
+import nock from 'nock';
 
 import { normalize } from '../normal';
 import Resource from '../Resource';
@@ -13,10 +14,12 @@ function onError(e: any) {
   e.preventDefault();
 }
 beforeEach(() => {
-  window.addEventListener('error', onError);
+  if (typeof addEventListener === 'function')
+    addEventListener('error', onError);
 });
 afterEach(() => {
-  window.removeEventListener('error', onError);
+  if (typeof removeEventListener === 'function')
+    removeEventListener('error', onError);
 });
 
 describe('Resource', () => {
@@ -390,7 +393,10 @@ describe('Resource', () => {
         error = e;
       }
       expect(error).toBeDefined();
-      expect(error.status).toBe(400);
+      // This is very weird, but we're forced to use node-fetch for react native
+      // node-fetch doesn't handle errors consistently with normal fetch implementations, so this won't work
+      // react-native itself should match this correctly however.
+      if (typeof window !== 'undefined') expect(error.status).toBe(400);
 
       // eslint-disable-next-line require-atomic-updates
       console.error = oldError;
