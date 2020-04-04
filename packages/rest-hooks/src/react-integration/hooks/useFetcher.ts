@@ -87,7 +87,7 @@ export default function useFetcher<
       if (process.env.NODE_ENV !== 'production') {
         if (
           isDeleteShape(shapeRef.current) &&
-          typeof shapeRef.current.schema.getId !== 'function'
+          typeof shapeRef.current.schema.pk !== 'function'
         ) {
           throw new Error(
             `Request for '${key}' of type delete used, but schema has no pk().
@@ -99,7 +99,7 @@ Note: Network response is ignored for delete type.`,
         }
       }
       const identifier = isDeleteShape(shapeRef.current)
-        ? shapeRef.current.schema.getId(params)
+        ? shapeRef.current.schema.pk(params)
         : key;
       let resolve: (value?: any | PromiseLike<any>) => void = 0 as any;
       let reject: (reason?: any) => void = 0 as any;
