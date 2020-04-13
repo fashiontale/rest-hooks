@@ -10,7 +10,7 @@ import SubscriptionManager from 'rest-hooks/state/SubscriptionManager';
 import PollingSubscription from 'rest-hooks/state/PollingSubscription';
 import { State, Manager } from 'rest-hooks/types';
 import useEnhancedReducer from '@rest-hooks/use-enhanced-reducer';
-import React, { ReactNode, useEffect, useMemo } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 
 interface ProviderProps {
   children: ReactNode;
@@ -30,10 +30,11 @@ export default function CacheProvider({
     managers.map(manager => manager.getMiddleware()),
   );
 
-  const optimisticState = useMemo(
-    () => state.optimistic.reduce(masterReducer, state),
-    [state],
-  );
+  const [optimisticState, setOptimisticState] = useState<any>();
+
+  useEffect(() => {
+    setOptimisticState(state.optimistic.reduce(masterReducer, state));
+  }, [state]);
 
   // if we change out the manager we need to make sure it has no hanging async
   useEffect(() => {
